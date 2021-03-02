@@ -6,5 +6,3 @@ environ.Env.read_env('environments.env')
 
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 
-if ENVIRONMENT == 'dev':
-	from m
