@@ -12,7 +12,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 import sys
+import environ
 from django.core.exceptions import ImproperlyConfigured
+
+
+environ.Env.read_env('environment.env')
 
 
 def get_secret(setting):
@@ -25,9 +29,7 @@ def get_secret(setting):
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 EXTERNAL_BASE = os.path.join(BASE_DIR, 'externals')
 EXTERNAL_LIBS_PATH = os.path.join(EXTERNAL_BASE, 'libs')
 EXTERNAL_APPS_PATH = os.path.join(EXTERNAL_BASE, 'apps')
@@ -107,11 +109,11 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': get_secret('DATABASE_NAME'),
         'USER': get_secret('DATABASE_USER'),
         'PASSWORD': get_secret('DATABASE_PASSWORD'),
-        'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
