@@ -14,6 +14,9 @@ import os
 import sys
 import environ
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.translation import gettext_lazy as _
+
+from myproject.apps.core.versioning import get_git_changeset_timestamp
 
 
 environ.Env.read_env('environment.env')
@@ -58,6 +61,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'myproject.apps.core',
+    'myproject.apps.ideas',
 ]
 
 MIDDLEWARE = [
@@ -141,7 +146,22 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
+
+LANGUAGES = [
+    ("bg", "Bulgarian"),    ("hr", "Croatian"),
+    ("cs", "Czech"),        ("da", "Danish"),
+    ("nl", "Dutch"),        ("en", "English"),
+    ("et", "Estonian"),     ("fi", "Finnish"),
+    ("fr", "French"),       ("de", "German"),
+    ("el", "Greek"),        ("hu", "Hungarian"),
+    ("ga", "Irish"),        ("it", "Italian"),
+    ("lv", "Latvian"),      ("lt", "Lithuanian"),
+    ("mt", "Maltese"),      ("pl", "Polish"),
+    ("pt", "Portuguese"),   ("ro", "Romanian"),
+    ("sk", "Slovak"),       ("sl", "Slovene"),
+    ("es", "Spanish"),      ("sv", "Swedish"),
+]
 
 TIME_ZONE = 'UTC'
 
@@ -155,4 +175,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+timestamp = get_git_changeset_timestamp(BASE_DIR)
+STATIC_URL = f'/static/{timestamp}/'
+
+
+MAGAZINE_ARTICLE_THEME_CHOICES = [
+    ('futurism', _("Futurism")),
+    ('nostalgia', _("Nostalgia")),
+    ('sustainability', _("Sustainability")),
+    ('wonder', _("Wonder")),
+    ('positivity', _("Positivity")),
+    ('solutions', _("Solutions")),
+    ('science', _("Science")),
+]
