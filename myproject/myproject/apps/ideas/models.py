@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from myproject.apps.core.models import (
@@ -23,10 +24,37 @@ class Idea(CreationModificationDateBase, MetaTagsBase, UrlBase):
     content = MultilingualTextField(
         _('Content'),
     )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_('Author'),
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    category = models.ForeignKey(
+        'categories.Category',
+        verbose_name=_('Category'),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     class Meta:
         verbose_name = _('Idea')
         verbose_name_plural = _('Ideas')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title'],
+                condition=models.Q(author=None),
+                name='unique_title_for_each_author'
+            ),
+            models.CheckConstraint(
+                check=models.Q(
+                    title__iregex=r'^\S.*\S$'
+                ),
+                name='title_has_no_leading_and_trailing_whitespaces',
+            )
+        ]
 
     def __str__(self):
         return self.title
@@ -62,6 +90,20 @@ class Idea2(models.Model):
     )
     translated_title = TranslateField('title')
     translated_content = TranslateField('content')
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_('Author'),
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    category = models.ForeignKey(
+        'categories.Category',
+        verbose_name=_('Category'),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     class Meta:
         verbose_name = _('Idea2')
